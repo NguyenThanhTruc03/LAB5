@@ -68,6 +68,69 @@
           "response": []
         },
         {
+          "name": "Create User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", () => pm.response.to.have.status(201));\r",
+                  "\r",
+                  "const res = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"name khớp dữ liệu CSV\", () => {\r",
+                  "    pm.expect(res.name).to.eql(pm.iterationData.get(\"name\"));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"job khớp dữ liệu CSV\", () => {\r",
+                  "    pm.expect(res.job).to.eql(pm.iterationData.get(\"job\"));\r",
+                  "});\r",
+                  "\r",
+                  "pm.environment.set(\"userId\", res.id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"{{name}}\",\r\n    \"job\": \"{{job}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Update User",
           "event": [
             {
@@ -182,66 +245,6 @@
                 "api",
                 "users",
                 "{{userId}}"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Create User",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Status code is 201\", () => pm.response.to.have.status(201));\r",
-                  "\r",
-                  "const res = pm.response.json();\r",
-                  "\r",
-                  "pm.test(\"name khớp dữ liệu CSV\", () => {\r",
-                  "    pm.expect(res.name).to.eql(pm.iterationData.get(\"name\"));\r",
-                  "});\r",
-                  "\r",
-                  "pm.test(\"job khớp dữ liệu CSV\", () => {\r",
-                  "    pm.expect(res.job).to.eql(pm.iterationData.get(\"job\"));\r",
-                  "});\r",
-                  "\r",
-                  "pm.environment.set(\"userId\", res.id);"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{userToken}}",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "formdata",
-              "formdata": [
-                {
-                  "key": "",
-                  "type": "file",
-                  "uuid": "24e1a03f-0177-4cd9-b5b8-09da9bf799f2",
-                  "src": "Vbxejx5eV/users.csv"
-                }
-              ]
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/users",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "users"
               ]
             }
           },
@@ -405,6 +408,10 @@
           "pm.request.headers.upsert({\r",
           "    key: \"x-api-key\",\r",
           "    value: pm.environment.get(\"apiKey\")\r",
+          "});",
+          "pm.request.headers.upsert({",
+          "    key: \"User-Agent\",",
+          "    value: \"Mozilla/5.0 (compatible; Newman-CI)\"",
           "});"
         ]
       }
