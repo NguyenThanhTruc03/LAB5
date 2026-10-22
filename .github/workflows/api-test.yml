@@ -3,6 +3,9 @@ name: API Test
 on:
   push:
     branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   newman:
@@ -21,11 +24,15 @@ jobs:
         run: npm install -g newman newman-reporter-htmlextra
 
       - name: Run Newman (Data-Driven)
+        env:
+          REQRES_API_KEY: ${{ secrets.REQRES_API_KEY }}
         run: |
           newman run ReqRes_Collection.json \
             -e ReqRes_Environment.json \
-            --env-var "apiKey=${{ secrets.REQRES_API_KEY }}" \
+            --env-var "baseUrl=https://reqres.in" \
+            --env-var "apiKey=$REQRES_API_KEY" \
             -d users.csv \
+            --timeout-request 15000 \
             --reporters cli,htmlextra \
             --reporter-htmlextra-export report.html
 
