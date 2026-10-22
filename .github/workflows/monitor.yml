@@ -2,7 +2,7 @@ name: API Monitor
 
 on:
   schedule:
-    - cron: '0 * * * *'
+    - cron: '0 */6 * * *'
   workflow_dispatch:
 
 jobs:
@@ -12,9 +12,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: List files
-        run: ls -la
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
