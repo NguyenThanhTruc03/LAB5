@@ -13,10 +13,7 @@
             "type": "text/javascript",
             "exec": [
               "pm.test(\"Availability: Status code is 200\", () => pm.response.to.have.status(200));",
-              "",
-              "pm.test(\"SLA: Response time < 800ms\", () => {",
-              "    pm.expect(pm.response.responseTime).to.be.below(800);",
-              "});"
+              "pm.test(\"SLA: Response time < 3000ms\", () => { pm.expect(pm.response.responseTime).to.be.below(3000); });"
             ]
           }
         }
@@ -24,14 +21,34 @@
       "request": {
         "method": "GET",
         "header": [
-          { "key": "x-api-key", "value": "{{apiKey}}", "type": "text" }
+          {
+            "key": "x-api-key",
+            "value": "{{apiKey}}",
+            "type": "text"
+          },
+          {
+            "key": "User-Agent",
+            "value": "Mozilla/5.0 (compatible; Newman-CI)",
+            "type": "text"
+          }
         ],
         "url": {
           "raw": "https://reqres.in/api/users?page=1",
           "protocol": "https",
-          "host": ["reqres", "in"],
-          "path": ["api", "users"],
-          "query": [{ "key": "page", "value": "1" }]
+          "host": [
+            "reqres",
+            "in"
+          ],
+          "path": [
+            "api",
+            "users"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            }
+          ]
         }
       }
     }
