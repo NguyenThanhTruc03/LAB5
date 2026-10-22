@@ -22,9 +22,12 @@ jobs:
         run: npm install -g newman newman-reporter-htmlextra
 
       - name: Run API monitor
+        env:
+          REQRES_API_KEY: ${{ secrets.REQRES_API_KEY }}
         run: |
           newman run ReqRes_Monitor.json \
-            --env-var "apiKey=${{ secrets.REQRES_API_KEY }}" \
+            --env-var "apiKey=$REQRES_API_KEY" \
+            --timeout-request 15000 \
             --reporters cli,htmlextra \
             --reporter-htmlextra-export monitor-report.html
 
